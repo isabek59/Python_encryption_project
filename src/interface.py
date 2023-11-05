@@ -14,16 +14,16 @@ class Interface:
         - decryption_var (tk.StringVar): Variable to store the decryption type selected by the user.
         - key_var (tk.StringVar): Variable to store the encryption/decryption key entered by the user.
         - shift_var (tk.IntVar): Variable to store the shift value used in Caesar encryption/decryption.
-        - decode_area (tk.Text): Text widget for displaying decrypted text.
-        - encode_area (tk.Text): Text widget for displaying encrypted text.
+        - decrypt_area (tk.Text): Text widget for displaying decrypted text.
+        - encrypt_area (tk.Text): Text widget for displaying encrypted text.
         - encryption_var (tk.StringVar): Variable to store the encryption type selected by the user.
         - root (tk.Tk): The main tkinter window.
         """
         self.decryption_var = None
         self.key_var = None
         self.shift_var = None
-        self.decode_area = None
-        self.encode_area = None
+        self.decrypt_area = None
+        self.encrypt_area = None
         self.encryption_var = None
         self.root = tk.Tk()
         self.root.resizable(False, False)
@@ -40,11 +40,11 @@ class Interface:
         """
         Create and layout the tkinter widgets for the encryption/decryption interface.
         """
-        self.encode_area = tk.Text(self.root, height=text_height, width=text_width)
-        self.encode_area.pack(side=tk.LEFT, padx=pad_x, pady=pad_y)
+        self.encrypt_area = tk.Text(self.root, height=text_height, width=text_width)
+        self.encrypt_area.pack(side=tk.LEFT, padx=pad_x, pady=pad_y)
 
-        self.decode_area = tk.Text(self.root, height=text_height, width=text_width)
-        self.decode_area.pack(side=tk.RIGHT, padx=pad_x, pady=pad_y)
+        self.decrypt_area = tk.Text(self.root, height=text_height, width=text_width)
+        self.decrypt_area.pack(side=tk.RIGHT, padx=pad_x, pady=pad_y)
 
         self.encryption_var = tk.StringVar()
         self.encryption_var.set("Caesar")  # Default encryption type
@@ -86,11 +86,11 @@ class Interface:
 
     def encrypt_text(self):
         """
-        Encrypt the text in the encode_area based on the selected encryption type and display the result in the
-        decode_area.
+        Encrypt the text in the encrypt_area based on the selected encryption type and display the result in the
+        decrypt_area.
         """
         encryption = Encryption()
-        text_to_encrypt = self.encode_area.get("1.0", "end-1c")
+        text_to_encrypt = self.encrypt_area.get("1.0", "end-1c")
 
         selected_encryption = self.encryption_var.get()
 
@@ -106,16 +106,16 @@ class Interface:
         else:
             encrypted_text = "Invalid encryption type"
 
-        self.decode_area.delete("1.0", tk.END)
-        self.decode_area.insert(tk.END, encrypted_text)
+        self.decrypt_area.delete("1.0", tk.END)
+        self.decrypt_area.insert(tk.END, encrypted_text)
 
     def decrypt_text(self):
         """
-        Decrypt the text in the decode_area based on the selected decryption type and display the result in the
-        encode_area.
+        Decrypt the text in the decrypt_area based on the selected decryption type and display the result in the
+        encrypt_area.
         """
         decryption = Decryption()
-        text_to_decrypt = self.decode_area.get("1.0", 'end-1c')
+        text_to_decrypt = self.decrypt_area.get("1.0", 'end-1c')
 
         selected_decryption = self.decryption_var.get()
 
@@ -131,12 +131,12 @@ class Interface:
         else:
             decrypted_text = "Invalid decryption type"
 
-        self.encode_area.delete("1.0", tk.END)
-        self.encode_area.insert(tk.END, decrypted_text)
+        self.encrypt_area.delete("1.0", tk.END)
+        self.encrypt_area.insert(tk.END, decrypted_text)
 
     def choose_file(self):
         """
-        Allow the user to choose a .txt file and insert its content into the encode_area.
+        Allow the user to choose a .txt file and insert its content into the encrypt_area.
         """
         file_path = askopenfilename(defaultextension=".txt", filetypes=[("Text files", "*.txt")])
 
@@ -146,17 +146,17 @@ class Interface:
         with open(file_path, 'r', encoding='utf-8') as file:
             file_content = file.read()
 
-        self.encode_area.delete("1.0", tk.END)
-        self.encode_area.insert(tk.END, file_content)
+        self.encrypt_area.delete("1.0", tk.END)
+        self.encrypt_area.insert(tk.END, file_content)
 
     def hack_text(self):
         """
-        Apply caesar_auto_decrypt to the text in decode_area and display the result in encode_area.
+        Apply caesar_auto_decrypt to the text in decrypt_area and display the result in encrypt_area.
         """
         decryption = Decryption()
-        text_to_decrypt = self.decode_area.get("1.0", 'end-1c')
+        text_to_decrypt = self.decrypt_area.get("1.0", 'end-1c')
 
         decrypted_text = decryption.caesar_auto_decrypt(text_to_decrypt)
 
-        self.encode_area.delete("1.0", tk.END)
-        self.encode_area.insert(tk.END, decrypted_text)
+        self.encrypt_area.delete("1.0", tk.END)
+        self.encrypt_area.insert(tk.END, decrypted_text)
